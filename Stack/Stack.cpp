@@ -7,9 +7,9 @@ struct Stack
 	int mass[10] = { 0 };
 };
 
-bool IsEmpty(Stack x)
+bool IsEmpty(Stack *x)
 {
-	if (x.top == -1)
+	if (x->top == -1)
 	{
 		printf("Stack is empty\n");
 		return true;
@@ -20,9 +20,9 @@ bool IsEmpty(Stack x)
 	}
 }
 
-bool IsFull(Stack x)
+bool IsFull(Stack *x)
 {
-	if (x.top == (x.mass_size - 1))
+	if (x->top == (x->mass_size - 1))
 	{
 		printf("Stack is full\n");
 		return true;
@@ -33,7 +33,7 @@ bool IsFull(Stack x)
 	}
 }
 
-void Pop(Stack x)
+void Pop(Stack *x)
 {
 	if (IsEmpty(x))
 	{
@@ -41,13 +41,13 @@ void Pop(Stack x)
 	}
 	else
 	{
-		printf("%d was got from the stack\n", x.mass[x.top]);
-		x.mass[x.top] = 0;
-		x.top--;
+		printf("%d was got from the stack\n", x->mass[x->top]);
+		x->mass[x->top] = 0;
+		x->top--;
 	}
 }
 
-void Push(Stack x, char number)
+void Push(Stack *x, char number)
 {
 	if (IsFull(x))
 	{
@@ -55,13 +55,13 @@ void Push(Stack x, char number)
 	}
 	else
 	{
-		x.top++;
-		x.mass[x.top] = number;
+		x->top++;
+		x->mass[x->top] = number;
 		printf("%c was added to the stack\n", number);
 	}
 }
 
-void Top(Stack x)
+void Top(Stack *x)
 {
 	if (IsEmpty(x))
 	{
@@ -69,23 +69,23 @@ void Top(Stack x)
 	}
 	else
 	{
-		printf("%d\n", x.mass[x.top]);
+		printf("%d\n", x->mass[x->top]);
 	}
 }
 
-void Size(Stack x)
+void Size(Stack *x)
 {
 	if (IsEmpty(x) == false)
 	{
-		printf("%d\n", (x.top + 1));
+		printf("%d\n", (x->top + 1));
 	}
 }
 
-void ShowAll(Stack x)
+void ShowAll(Stack *x)
 {
-	for (int i = 1; i <= (x.top + 1); i++)
+	for (int i = 1; i <= x->top; i++)
 	{
-		printf("%d\n", x.mass[i]);
+		printf("%d\n", x->mass[i]);
 	}
 }
 
@@ -134,7 +134,7 @@ char NumberChoise()
 	return numberS;
 }
 
-int ActionSwitch(Stack x, char action)
+int ActionSwitch(Stack *x, char action)
 {
 	char number;
 	switch (action)
@@ -173,6 +173,6 @@ int main()
 		printf("5. Show all numbers in the stack\n");
 		printf("6. Exit\n");
 		char action = ActionChoise();
-		ActionSwitch(x, action);
+		ActionSwitch(&x, action);
 	}
 }
