@@ -5,12 +5,11 @@ struct Stack
 	int top = -1;
 	size_t mass_size = 10;
 	int mass[10] = { 0 };
-	int temporarynumber = 1;
 };
 
-bool IsEmpty(Stack x)
+bool IsEmpty(Stack *x)
 {
-	if (x.top == -1)
+	if (x->top == -1)
 	{
 		printf("Stack is empty\n");
 		return true;
@@ -21,9 +20,9 @@ bool IsEmpty(Stack x)
 	}
 }
 
-bool IsFull(Stack x)
+bool IsFull(struct Stack *x)
 {
-	if (x.top == (x.mass_size - 1))
+	if (x->top == (x->mass_size - 1))
 	{
 		printf("Stack is full\n");
 		return true;
@@ -34,7 +33,7 @@ bool IsFull(Stack x)
 	}
 }
 
-void Pop(Stack x)
+void Pop(Stack *x)
 {
 	if (IsEmpty(x))
 	{
@@ -42,13 +41,13 @@ void Pop(Stack x)
 	}
 	else
 	{
-		printf("%d was got from the stack\n", x.mass[x.top]);
-		x.mass[x.top] = 0;
-		x.top--;
+		printf("%d was got from the stack\n", x->mass[x->top]);
+		x->mass[x->top] = 0;
+		x->top--;
 	}
 }
 
-void Push(Stack x/*, char number*/)
+void Push(struct Stack *x, int a)
 {
 	if (IsFull(x))
 	{
@@ -56,13 +55,13 @@ void Push(Stack x/*, char number*/)
 	}
 	else
 	{
-		x.top++;
-		x.mass[x.top] = x.temporarynumber /*number*/;
-		printf("%c was added to the stack\n", x.temporarynumber/*number*/);
+		x->top++;
+		x->mass[x->top] = a /*number*/;
+		printf("%d was added to the stack\n", a);
 	}
 }
 
-void Top(Stack x)
+void Top(Stack *x)
 {
 	if (IsEmpty(x))
 	{
@@ -70,23 +69,23 @@ void Top(Stack x)
 	}
 	else
 	{
-		printf("%d\n", x.mass[x.top]);
+		printf("%d\n", x->mass[x->top]);
 	}
 }
 
-void Size(Stack x)
+void Size(Stack *x)
 {
 	if (IsEmpty(x) == false)
 	{
-		printf("%d\n", (x.top + 1));
+		printf("%d\n", (x->top + 1));
 	}
 }
 
-void ShowAll(Stack x)
+void ShowAll(Stack *x)
 {
-	for (int i = 1; i <= x.top; i++)
+	for (int i = 0; i <= x->top; i++)
 	{
-		printf("%d\n", x.mass[i]);
+		printf("%d\n", x->mass[i]);
 	}
 }
 
@@ -163,7 +162,7 @@ void ShowAll(Stack x)
 
 int main()
 {
-	Stack x;
+	struct Stack x;
 	/*for (int i = 1; i != 0; i++)
 	{
 		printf("choose action:\n");
@@ -176,33 +175,16 @@ int main()
 		char action = ActionChoise();
 		ActionSwitch(&x, action);
 	}*/
-	Push(x);
-	x.temporarynumber = 4;
-	Push(x);
-	x.temporarynumber = 5;
-	Push(x);
-	x.temporarynumber = 3;
-	Size(x);
-	ShowAll(x);
-	Pop(x);
-	Top(x);
-	Pop(x);
-	Pop(x);
-	Pop(x);
-	Push(x);
-	x.temporarynumber = 2;
-	Push(x);
-	x.temporarynumber = 4;
-	Push(x);
-	x.temporarynumber = 9;
-	Push(x);
-	Push(x);
-	Push(x);
-	Push(x);
-	Push(x);
-	Push(x);
-	x.temporarynumber = 1;
-	Push(x);
-	Push(x);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
+	Push(&x, 4);
 	return 0;
 }
