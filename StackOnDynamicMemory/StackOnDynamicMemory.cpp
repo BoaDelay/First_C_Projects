@@ -10,9 +10,8 @@ struct Stack
 
 void Stack_Init(Stack* x)
 {
-	x->size = 10;
 	x->amount_of_elements = 0;
-	x->memory_pointer = (int*)malloc(x->size * sizeof(int));
+	x->memory_pointer = (int*)calloc(x->size, sizeof(int));
 }
 
 void Stack_Delete(Stack* x)
@@ -90,22 +89,76 @@ void Size(Stack* x)
 	printf("There are %d elements in the stack\n", x->amount_of_elements);
 }
 
+int Size_Init(Stack* x)
+{
+	printf("Enter stack size\n");
+	scanf_s("%d", &x->size);
+	return x->size;
+}
+
+void Stack_Data_Init(int* stack_data)
+{
+	printf("Choose number\n");
+	scanf_s("%d", &*stack_data);
+}
+
+bool ActionChoise(Stack* x)
+{
+	printf("Choose action\n");
+	printf("1. Push\n");
+	printf("2. Pop\n");
+	printf("3. Show all\n");
+	printf("4. Top\n");
+	printf("5. Size\n");
+	printf("6. Exit\n");
+	int action;
+	scanf_s("%d", &action);
+	int stack_data = 0;
+	switch (action)
+	{
+		case 1:
+			Stack_Data_Init(&stack_data);
+			Push(x, stack_data);
+			break;
+		case 2:
+			Pop(x);
+			break;
+		case 3:
+			ShowAll(x);
+			break;
+		case 4:
+			Top(x);
+			break;
+		case 5:
+			Size(x);
+			break;
+		case 6:
+			return true;
+		default:
+			printf("Choise error\n");
+			break;
+	}
+	return false;
+}
+
 int main()
 {
 	Stack x;
 
+	Size_Init(&x);
 	Stack_Init(&x);
-
-	Push(&x, 4);
-
+	for (;;)
+	{
+		if (ActionChoise(&x) == true)
+		{
+			return 0;
+		}
+	}
+	/*Push(&x, 4);
 	Size(&x);
-
 	Top(&x);
-
 	Pop(&x);
-
 	Pop(&x);
-
 	Push(&x, 1);
 	Push(&x, 3);
 	Push(&x, 2);
@@ -117,9 +170,7 @@ int main()
 	Push(&x, 8);
 	Push(&x, 0);
 	ShowAll(&x);
-
 	Push(&x, 1);
-
-	Stack_Delete(&x);
+	Stack_Delete(&x);*/
 	return 0;
 }
