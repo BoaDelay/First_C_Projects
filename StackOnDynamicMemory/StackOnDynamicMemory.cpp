@@ -154,6 +154,7 @@ bool ActionChoise(Stack* x)
 			return true;
 		default:
 			printf("Ошибка выбора, попробуйте снова\n");
+			//Choise error
 			break;
 	}
 	return false;
