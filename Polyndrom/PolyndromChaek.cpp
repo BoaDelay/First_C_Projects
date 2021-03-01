@@ -1,36 +1,33 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 
-using namespace std;
-
-bool IsPolyndrom(string input)
+void IsPolyndrom(const std::string& input, const std::string& input_keeper)
 {
-	for (int i = 0; i != input.length(); i++)
-	{
-		input.erase(find(input.begin(), input.end(), ' '));
-	}
-
-	for (int i = 0; i != input.length(); i++)
+	for (int i = 0; i != (input.length() / 2); i++)
 	{
 		if (input[i] != input[input.length() - i - 1])
 		{
-			return false;
+			std::cout << input_keeper << " is not polyndrom" << std::endl;
+			exit(0);
 		}
 	}
-	return true;
+	std::cout << input_keeper << " is a polyndrom" << std::endl;
+	exit(0);
+}
+
+void Input()
+{
+	std::string input;
+	std::getline(std::cin, input);
+	const std::string input_keeper = input;
+
+	input.erase(std::remove(input.begin(), input.end(), ' '), input.end());
+
+	IsPolyndrom(input, input_keeper);
 }
 
 int main()
 {
-	string input;
-	getline(cin, input);
-
-	if (IsPolyndrom(input))
-	{
-		cout << input << " is a polyndrom" << endl;
-	}
-	else
-	{
-		cout << input << " is not polyndrom" << endl;
-	}
+	Input();
 }
