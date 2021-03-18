@@ -1,76 +1,50 @@
-#include <stdio.h>
-#include <cstdlib>
-#include <assert.h>
+#include "StackOnDynamicMemory.h"
 
-struct Stack
+void Calculator(Stack* x)
 {
-	int* memory_pointer;
-	unsigned int size;
-	unsigned int amount_of_elements;
-};
+	int input;
 
-void Stack_Init(Stack* x)
-{
-	x->size = 8;
-	x->amount_of_elements = 0;
-	x->memory_pointer = (int*)calloc(x->size, sizeof(int));
-}
-
-void Stack_Delete(Stack* x)
-{
-	free(x->memory_pointer);
-}
-
-void Push(Stack* x, int stack_data)
-{
-	if (x->amount_of_elements == x->size)
+	while ((input = getchar()) != '\n')
 	{
-		x->size = x->size * 2;
-		x->memory_pointer = (int*)realloc(x->memory_pointer, (x->size * sizeof(int)));
-		x->memory_pointer[x->amount_of_elements++] = stack_data;
-		printf("%d was added to the stack\n", x->memory_pointer[x->amount_of_elements - 1]);
-	}
-	else
-	{
-		x->memory_pointer[x->amount_of_elements++] = stack_data;
-		printf("%d was added to the stack\n", x->memory_pointer[x->amount_of_elements - 1]);
-	}
-}
+		int stack_data;
 
-void Pop(Stack* x)
-{
-	if ((x->size / 4) == x->amount_of_elements)
-	{
-		x->size = x->size / 3;
-		x->memory_pointer = (int*)realloc(x->memory_pointer, (x->size * sizeof(int)));
-		assert(x->amount_of_elements != 0 && "Pop from empety stack");
-		printf("%d was deleted from the stack\n", x->memory_pointer[x->amount_of_elements - 1]);
-		x->memory_pointer[--x->amount_of_elements] = NULL;
+		//printf("%d\n", input);
+		switch (input)
+		{
+			case ' ': 
+				break;
+			case '+':
+				stack_data = x->memory_pointer[x->amount_of_elements - 2] + x->memory_pointer[x->amount_of_elements - 1];
+				//printf("%d\n", stack_data);
+				Pop(x);
+				Pop(x);
+				Push(x, stack_data);
+				break;
+			case '*':
+				stack_data = x->memory_pointer[x->amount_of_elements - 2] * x->memory_pointer[x->amount_of_elements - 1];
+				Pop(x);
+				Pop(x);
+				Push(x, stack_data);
+				break;
+			case '-':
+				stack_data = x->memory_pointer[x->amount_of_elements - 2] - x->memory_pointer[x->amount_of_elements - 1];
+				Pop(x);
+				Pop(x);
+				Push(x, stack_data);
+				break;
+			case '/':
+				stack_data = x->memory_pointer[x->amount_of_elements - 2] / x->memory_pointer[x->amount_of_elements - 1];
+				Pop(x);
+				Pop(x);
+				Push(x, stack_data);
+				break;
+			default:
+				ungetc(input, stdin);
+				assert(scanf_s("%d", &stack_data) == 1 && "Can not read in");
+				Push(x, stack_data);
+				break;
+		}
 	}
-	else
-	{
-		assert(x->amount_of_elements != 0 && "Pop from empety stack");
-		printf("%d was deleted from the stack\n", x->memory_pointer[x->amount_of_elements - 1]);
-		x->memory_pointer[--x->amount_of_elements] = NULL;
-	}
-}
-
-void ShowAll(const Stack* x)
-{
-	for (int i = 0; i < x->amount_of_elements; i++)
-	{
-		printf("%d\n", x->memory_pointer[i]);
-	}
-}
-
-void Top(const Stack* x)
-{
-	printf("The last element is %d\n", x->memory_pointer[x->amount_of_elements - 1]);
-}
-
-void Amount_Of_Elements(const Stack* x)
-{
-	printf("There are %d elements in the stack\n", x->amount_of_elements);
 }
 
 int main()
@@ -78,6 +52,9 @@ int main()
 	Stack x;
 
 	Stack_Init(&x);
+	Calculator(&x);
+	int result = x.memory_pointer[x.amount_of_elements - 1];
+	printf("The result is %d\n", result);
 	Stack_Delete(&x);
 	return 0;
 }
