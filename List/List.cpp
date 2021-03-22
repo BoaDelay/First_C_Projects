@@ -4,95 +4,102 @@
 struct node
 {
 	int data;
-	struct node* next;
+	node* next;
 };
 
-void RoadToElement(node* x)
+node* ListInit(int data)
 {
+	node* root = (node*)malloc(sizeof(node));
 
-}
+	root->data = data;
+	root->next = NULL;
 
-void ListInitialization(node* x)
-{
-	x = (node*)malloc(sizeof(node));
-	x->next = NULL;
+	return root;
 }
 
 void ListDelete(node* x)
 {
-	free(x);
-}
-
-void ShowAll(const node* x)
-{
-
-}
-
-void ElementAdd(node* x)
-{
-
-}
-
-void ElementDelete(node* x)
-{
-
-}
-
-void AmountOfElements(const node* x)
-{
-
-}
-
-void ShowElement(const node* x)
-{
-
-}
-
-bool ActionChoise(node* x)
-{
-	char input;
-
-	scanf_s("%c", &input);
-
-	printf("Choose action:\n");
-	printf("1. Show element\n");
-	printf("2. Show all elements\n");
-	printf("3. Add element\n");
-	printf("4. Delete element\n");
-	printf("5. Find out the number of elements\n");
-	printf("6. Exit\n");
-
-	switch (input)
+	while (x != NULL)
 	{
-		case '1':
-			ShowElement(x);
-			return false;
-		case '2':
-			ShowAll(x);
-			return false;
-		case '3':
-			ElementAdd(x);
-			return false;
-		case '4':
-			ElementDelete(x);
-			return false;
-		case '5':
-			AmountOfElements(x);
-			return false;
-		case '6':
-			return true;
+		node* temp = x;
+		x = x->next;
+
+		free(temp);
+	}
+}
+
+node* AddBegin(int data, node* x)
+{
+	node* temp = (node*)malloc(sizeof(node));
+
+	temp->data = data;
+	temp->next = x;
+
+	return temp;
+}
+
+node* DelBegin(node* x)
+{
+	node* temp = x;
+	x = x->next;
+
+	free(temp);
+}
+
+node* AddEnd(int data, node* x)
+{
+	node* temp = (node*)malloc(sizeof(node));
+
+	temp->data = data;
+	temp->next = NULL;
+
+	node* slider = x;
+
+	while (slider->next != NULL)
+	{
+		slider = slider->next;
+	}
+
+	slider->next = temp;
+
+	return temp;
+}
+
+node* DelEnd(node* x)
+{
+	node* slider = x;
+	node* temp_slider = x;
+	int i = 0;
+
+	while (slider->next != NULL)
+	{
+		slider = slider->next;
+		if (i != 0)
+		{
+			temp_slider = temp_slider->next;
+		}
+		i++;
+	}
+
+	free(slider);
+
+	temp_slider->next = NULL;
+}
+
+void ShowAll(node* x)
+{
+	node* slider = x;
+
+	while (slider->next != NULL)
+	{
+		printf("%d", slider->data);
+
+		slider = slider->next;
 	}
 }
 
 int main()
 {
-	node list;
-
-	for (;;)
-	{
-		if (ActionChoise(&list))
-		{
-			exit(0);
-		}
-	}
+	node* root = ListInit(1);
+	//ListDelete();
 }
