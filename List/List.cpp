@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cstdlib>
+#include <assert.h>
 
 struct node
 {
@@ -40,6 +41,8 @@ node* AddBegin(int data, node* x)
 
 void DelBegin(node* x)
 {
+	assert(x->next != NULL && "Deleting root element");
+
 	node* temp = x;
 	x = x->next;
 
@@ -67,6 +70,8 @@ node* AddEnd(int data, node* x)
 
 void DelEnd(node* x)
 {
+	assert(x->next != NULL && "Deleting root element");
+
 	node* slider = x;
 	node* temp_slider = x;
 	int i = 0;
@@ -116,16 +121,17 @@ void AmountOfElements(node* x)
 
 int main()
 {
-	node* root = ListInit(2);
+	node* root = ListInit(3);
 
-	node* elem = AddBegin(1, root);
-	node* elem1 = AddEnd(3, elem);
+	node* elem = AddBegin(2, root);
+	elem = AddBegin(1, elem);
+	//root = AddEnd(3, elem);
 	ShowAll(elem);
-	AmountOfElements(elem);
-	DelEnd(elem);
-	DelBegin(elem);
-	ShowAll(root);
-	AmountOfElements(root);
+	//AmountOfElements(elem);
+	//DelEnd(root);
+	//DelBegin(elem);
+	//ShowAll(root);
+	//AmountOfElements(root);
 
-	ListDelete(root);
+	ListDelete(elem);
 }
