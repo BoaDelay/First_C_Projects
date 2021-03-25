@@ -38,7 +38,7 @@ node* AddBegin(int data, node* x)
 	return temp;
 }
 
-node* DelBegin(node* x)
+void DelBegin(node* x)
 {
 	node* temp = x;
 	x = x->next;
@@ -65,7 +65,7 @@ node* AddEnd(int data, node* x)
 	return temp;
 }
 
-node* DelEnd(node* x)
+void DelEnd(node* x)
 {
 	node* slider = x;
 	node* temp_slider = x;
@@ -90,16 +90,42 @@ void ShowAll(node* x)
 {
 	node* slider = x;
 
-	while (slider->next != NULL)
+	while (slider != NULL)
 	{
 		printf("%d", slider->data);
 
 		slider = slider->next;
 	}
+
+	printf("\n");
+}
+
+void AmountOfElements(node* x)
+{
+	node* slider = x;
+	int counter = 1;
+
+	while (slider->next != NULL)
+	{
+		slider = slider->next;
+		counter += 1;
+	}
+
+	printf("%d\n", counter);
 }
 
 int main()
 {
-	node* root = ListInit(1);
-	//ListDelete();
+	node* root = ListInit(2);
+
+	node* elem = AddBegin(1, root);
+	node* elem1 = AddEnd(3, elem);
+	ShowAll(elem);
+	AmountOfElements(elem);
+	DelEnd(elem);
+	DelBegin(elem);
+	ShowAll(root);
+	AmountOfElements(root);
+
+	ListDelete(root);
 }
