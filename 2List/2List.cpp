@@ -2,19 +2,19 @@
 #include <cstdlib>
 #include <assert.h>
 
-struct node
+typedef struct node
 {
 	int data;
 	node* next;
 	node* prev;
-};
+}node;
 
-struct doublelinkedlist
+typedef struct doublelinkedlist
 {
 	node* begin;
 	node* end;
 	size_t size;
-};
+}doublelinkedlist;
 
 doublelinkedlist* DoubleLinkedListInit()
 {
@@ -43,51 +43,75 @@ void DoubleLinkedListDelete(doublelinkedlist* x)
 	free(x);
 }
 
-node* AddBegin(doublelinkedlist* x, int data)
+void AddBegin(doublelinkedlist* x, int data)
 {
 	node* temp = (node*)malloc(sizeof(node));
 
-	x->begin->next = temp;
-	temp->prev = x->begin;
 	temp->data = data;
+	temp->next = x->begin;
+	temp->prev = NULL;
+
+	if (x->begin)
+	{
+		x->begin->prev = temp;
+	}
+
+	x->begin = temp;
+
+	if (x->end == NULL)
+	{
+		x->end = temp;
+	}
 
 	x->size++;
 
 	printf("Element was added to the beginning of the list\n");
-
-	return temp;
 }
 
-node* AddEnd(doublelinkedlist* x, int data)
+void AddEnd(doublelinkedlist* x, int data)
 {
 	node* temp = (node*)malloc(sizeof(node));
 
-	x->end->prev = temp;
-	temp->next = x->end;
 	temp->data = data;
+	temp->prev = x->end;
+	temp->next = NULL;
+
+	if (x->end)
+	{
+		x->end->next = temp;
+	}
+
+	x->end = temp;
+
+	if (x->begin == NULL)
+	{
+		x->begin = temp;
+	}
 
 	x->size++;
 
 	printf("Element was added to the end of the list\n");
-
-	return temp;
 }
 
 void DeleteBegin(doublelinkedlist* x)
 {
-	node* slider = x->begin;
-	node* deleter = NULL;
+	node* deleter = x->begin;
 
-	assert(slider->next != x->end && "Can not delete root element\n");
+	assert(x->begin != NULL && "Can not delete element\n");
 
-	slider = slider->next;
-	deleter = slider;
-	slider = slider->next;
+	x->begin = x->begin->next;
+
+	if (x->begin)
+	{
+		x->begin->prev = NULL;
+	}
+
+	if (deleter == x->end)
+	{
+		x->end = NULL;
+	}
 
 	free(deleter);
-
-	x->begin->next = slider;
-	slider->prev = x->begin;
 
 	x->size--;
 
@@ -96,19 +120,23 @@ void DeleteBegin(doublelinkedlist* x)
 
 void DeleteEnd(doublelinkedlist* x)
 {
-	node* slider = x->end;
-	node* deleter = NULL;
+	node* deleter = x->end;
 
-	assert(slider->prev != x->begin && "Can not delete root element\n");
+	assert(x->end != NULL && "Can not delete element\n");
 
-	slider = slider->prev;
-	deleter = slider;
-	slider = slider->prev;
+	x->end = x->end->prev;
+
+	if (x->end)
+	{
+		x->end->next = NULL;
+	}
+
+	if (deleter == x->begin)
+	{
+		x->begin = NULL;
+	}
 
 	free(deleter);
-
-	x->end->prev = slider;
-	slider->next = x->end;
 
 	x->size--;
 
@@ -121,98 +149,118 @@ void ShowAll(const doublelinkedlist* x)
 
 	while (slider != NULL)
 	{
-		printf("%d\n", slider);
+		printf("%d\n", slider->data);
 
 		slider = slider->next;
 	}
 }
 
-node* AddFree(doublelinkedlist* x, int index, int data)
+node* GetNthElem(doublelinkedlist* x, int index)
 {
-	node* temp = (node*)malloc(sizeof(node));
+	assert(x->size >= index && index > 0 && "Wrong index\n");
 
-	if (index <= x->size / 2)
+	node* slider = NULL;
+
+	if (index >= x->size / 2)
 	{
-		node* slider = x->begin;
-		
-		for (int i = 1; i != index - 1; i++)
-		{
-			slider = slider->next;
-		}
+		slider = x->end;
 
-		node* temp_slider = slider->next;
-
-		temp->next = temp_slider;
-		temp->prev = slider;
-		temp->data = data;
-	}
-	else
-	{
-		node* slider = x->end;
-
-		for (int i = x->size; i != index + 1; i--)
+		for (int i = x->size; i > index; i--)
 		{
 			slider = slider->prev;
 		}
+	}
+	else
+	{
+		slider = x->begin;
 
-		node* temp_slider = slider->prev;
+		for (int i = 1; i < index; i++)
+		{
+			slider = slider->next;
+		}
+	}
 
-		temp->next = slider;
-		temp->prev = temp_slider;
-		temp->data = data;
+	return slider;
+}
+
+void Insert(doublelinkedlist* x, int index, int data)
+{
+	node* slider = GetNthElem(x, index);
+	node* temp = (node*)malloc(sizeof(node));
+
+	temp->data = data;
+
+	if (slider->next == NULL)
+	{
+		x->end = temp;
+	}
+	else
+	{
+
 	}
 
 	x->size++;
 
-	printf("Element was added to the %d posision of the list\n", index);
-
-	return temp;
+	printf("%d Element was added to the list\n", index);
 }
 
-void DeleteFree(doublelinkedlist* x, int index)
+void DeleteNthElem(doublelinkedlist* x, int index)
 {
-	if (index <= x->size / 2)
+	node* slider = GetNthElem(x, index);
+
+	node* deleter = slider;
+	node* temp_slider = slider->next;
+
+	slider = slider->prev;
+
+	free(deleter);
+
+	if (slider)
 	{
-		node* slider = x->begin;
-
-		for (int i = 1; i != index - 1; i++)
-		{
-			slider = slider->next;
-		}
-
-		node* temp_slider = slider->next;
-		temp_slider = temp_slider->next;
-
-		free(slider->next);
-
 		slider->next = temp_slider;
+	}
+	else
+	{
+		x->begin = slider;
+	}
+
+	if (temp_slider)
+	{
 		temp_slider->prev = slider;
 	}
 	else
 	{
-		node* slider = x->end;
-
-		for (int i = x->size; i != index + 1; i--)
-		{
-			slider = slider->prev;
-		}
-
-		node* temp_slider = slider->prev;
-		temp_slider = temp_slider->prev;
-
-		free(slider->prev);
-
-		slider->prev = temp_slider;
-		temp_slider->next = slider;
+		x->end = temp_slider;
 	}
 
 	x->size--;
 
-	printf("Element was deleted from the %d posision of the list\n", index);
+	printf("%d element was deleted from the list\n", index);
+}
+
+void size(const doublelinkedlist* x)
+{
+	printf("%d", x->size);
 }
 
 int main()
 {
 	doublelinkedlist* x = DoubleLinkedListInit();
+
+	AddEnd(x, 1);
+	//AddEnd(x, 2);
+	//AddEnd(x, 3);
+	//AddEnd(x, 4);
+	//node* elem = GetNthElem(x, 1);
+	//printf("%d", elem->data);
+	//AddEnd(x, 4);
+	//AddBegin(x, 2);
+	//AddBegin(x, 1);
+	//DeleteBegin(x);
+	//DeleteEnd(x);
+	//ShowAll(x);
+	DeleteNthElem(x, 1);
+	ShowAll(x);
+
 	DoubleLinkedListDelete(x);
 }
