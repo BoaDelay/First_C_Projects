@@ -157,27 +157,16 @@ void ShowAll(const doublelinkedlist* x)
 
 node* GetNthElem(doublelinkedlist* x, int index)
 {
-	assert(x->size >= index && index > 0 && "Wrong index\n");
+	assert(x->size >= index && "Wrong index\n");
+	assert(index >= 0 && "Wrong index\n");
 
-	node* slider = NULL;
+	node* slider = x->begin;
+	size_t i = 0;
 
-	if (index >= x->size / 2)
+	while (slider && i < index)
 	{
-		slider = x->end;
-
-		for (int i = x->size; i > index; i--)
-		{
-			slider = slider->prev;
-		}
-	}
-	else
-	{
-		slider = x->begin;
-
-		for (int i = 1; i < index; i++)
-		{
-			slider = slider->next;
-		}
+		slider = slider->next;
+		i++;
 	}
 
 	return slider;
@@ -185,18 +174,36 @@ node* GetNthElem(doublelinkedlist* x, int index)
 
 void Insert(doublelinkedlist* x, int index, int data)
 {
+	assert(index <= x->size && "Wrong index\n");
+
 	node* slider = GetNthElem(x, index);
 	node* temp = (node*)malloc(sizeof(node));
 
 	temp->data = data;
+	temp->prev = NULL;
+	temp->next = NULL;
 
-	if (slider->next == NULL)
+	if (slider)
+	{
+		temp->next = slider;
+
+		if (slider->prev)
+		{
+			slider->prev->next = temp;
+		}
+
+		temp->prev = slider->prev;
+		slider->prev = temp;
+	}
+
+	if (!temp->prev)
+	{
+		x->begin = temp;
+	}
+
+	if (!temp->next)
 	{
 		x->end = temp;
-	}
-	else
-	{
-
 	}
 
 	x->size++;
@@ -206,32 +213,33 @@ void Insert(doublelinkedlist* x, int index, int data)
 
 void DeleteNthElem(doublelinkedlist* x, int index)
 {
+	assert(x->size >= index + 1 && "Wrong index\n");
+
 	node* slider = GetNthElem(x, index);
 
-	node* deleter = slider;
-	node* temp_slider = slider->next;
+	printf("data %d\n", slider->data);
 
-	slider = slider->prev;
-
-	free(deleter);
-
-	if (slider)
+	if (slider->prev)
 	{
-		slider->next = temp_slider;
-	}
-	else
-	{
-		x->begin = slider;
+		slider->prev->next = slider->next;
 	}
 
-	if (temp_slider)
+	if (slider->next)
 	{
-		temp_slider->prev = slider;
+		slider->next->prev = slider->prev;
 	}
-	else
+
+	if (!slider->prev)
 	{
-		x->end = temp_slider;
+		x->begin = slider->next;
 	}
+
+	if (!slider->next)
+	{
+		x->end = slider->prev;
+	}
+
+	free(slider);
 
 	x->size--;
 
@@ -247,19 +255,8 @@ int main()
 {
 	doublelinkedlist* x = DoubleLinkedListInit();
 
-	AddEnd(x, 1);
-	//AddEnd(x, 2);
-	//AddEnd(x, 3);
-	//AddEnd(x, 4);
-	//node* elem = GetNthElem(x, 1);
-	//printf("%d", elem->data);
-	//AddEnd(x, 4);
-	//AddBegin(x, 2);
-	//AddBegin(x, 1);
-	//DeleteBegin(x);
-	//DeleteEnd(x);
-	//ShowAll(x);
-	DeleteNthElem(x, 1);
+	Insert(x, 0, 1);
+	DeleteNthElem(x, 0);
 	ShowAll(x);
 
 	DoubleLinkedListDelete(x);
